@@ -22,3 +22,8 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+vendor/
+vendor_incomplete_*/
+vendor_retry_*/
+node_modules/
+.env

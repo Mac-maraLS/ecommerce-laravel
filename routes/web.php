@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 
@@ -47,9 +48,21 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'verified', 'role:empleado'])->group(function () {
+    Route::get('/empleado', [DashboardController::class, 'empleado'])->name('empleado.dashboard');
+});
+
+Route::middleware(['auth', 'verified', 'role:cliente'])->group(function () {
+    Route::get('/cliente', [DashboardController::class, 'cliente'])->name('cliente.dashboard');
+});
 
 /*
 |--------------------------------------------------------------------------
