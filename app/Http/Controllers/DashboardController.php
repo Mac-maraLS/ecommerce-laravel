@@ -20,16 +20,20 @@ class DashboardController extends Controller
 
     public function admin(): View
     {
-        return view('dashboards.admin');
+        $users = \App\Models\User::all();
+        $productsCount = \App\Models\Product::count();
+        return view('dashboards.admin', compact('users', 'productsCount'));
     }
 
     public function empleado(): View
     {
-        return view('dashboards.empleado');
+        $productos = \App\Models\Product::all();
+        return view('dashboards.empleado', compact('productos'));
     }
 
     public function cliente(): View
     {
-        return view('dashboards.cliente');
+        $productos = \App\Models\Product::all();
+        return view('dashboards.cliente', compact('productos'));
     }
 }
