@@ -1,77 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Catálogo | Café ToMaBra</title>
+@extends('layouts.app')
 
-    <style>
-        body {
-            font-family: Arial;
-            margin: 0;
-            background: #f5f5f5;
-        }
+@section('content')
+    <section class="hero">
+        <h1>Catalogo</h1>
+        <p>Listado publico de productos con sus vendedores y categorias.</p>
+    </section>
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 10%;
-            background: white;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            padding: 40px;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .price {
-            color: green;
-            font-weight: bold;
-        }
-
-        img {
-            width: 100%;
-        }
-    </style>
-</head>
-
-<body>
-
-<nav>
-    <a href="/">Inicio</a>
-
-    <div>
-        <a href="/nosotros">Nosotros</a>
-        <a href="/contacto">Contacto</a>
-    </div>
-</nav>
-
-<h1 style="text-align:center;">🛒 Catálogo</h1>
-
-<div class="grid">
-
-@foreach($products as $product)
-    <div class="card">
-
-        @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}">
-        @endif
-
-        <h3>{{ $product->name }}</h3>
-        <p>{{ $product->description }}</p>
-        <p class="price">$ {{ $product->price }}</p>
-
-    </div>
-@endforeach
-
-</div>
-
-</body>
-</html>
+    <section class="grid cols-3">
+        @foreach($productos as $producto)
+            <article class="card">
+                <h3>{{ $producto->nombre }}</h3>
+                <p>{{ $producto->descripcion }}</p>
+                <p><strong>${{ number_format($producto->precio, 2) }}</strong> | Existencia: {{ $producto->existencia }}</p>
+                <p>Vendedor: {{ $producto->vendedor->nombre_completo }}</p>
+                <div>
+                    @foreach($producto->categorias as $categoria)
+                        <span class="badge">{{ $categoria->nombre }}</span>
+                    @endforeach
+                </div>
+            </article>
+        @endforeach
+    </section>
+@endsection

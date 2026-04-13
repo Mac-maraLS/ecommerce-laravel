@@ -1,45 +1,92 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-
-        <!-- Bootstrap 5 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                @yield('content')
-            </main>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title ?? 'Mini Proyecto 2' }}</title>
+    <style>
+        :root {
+            --bg: #f5f1ea;
+            --card: #ffffff;
+            --ink: #1f2937;
+            --accent: #9a3412;
+            --accent-soft: #fed7aa;
+            --line: #d6d3d1;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Georgia, serif; background: var(--bg); color: var(--ink); }
+        nav, main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+        nav { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 20px 0; }
+        nav a, nav button { text-decoration: none; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+        nav .links { display: flex; flex-wrap: wrap; gap: 10px; }
+        main { padding-bottom: 40px; }
+        .hero, .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px; margin-bottom: 18px; }
+        .grid { display: grid; gap: 18px; }
+        .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 18px; overflow: hidden; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        th { background: #fef2f2; }
+        form.inline { display: inline; }
+        input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; font: inherit; }
+        label { display: block; margin-bottom: 12px; font-weight: 700; }
+        textarea { min-height: 120px; resize: vertical; }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .button { display: inline-block; background: var(--accent); color: white; border: none; border-radius: 10px; padding: 10px 16px; text-decoration: none; cursor: pointer; }
+        .button.secondary { background: #57534e; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); margin: 2px 6px 2px 0; }
+        .alert { padding: 14px 16px; border-radius: 12px; margin-bottom: 18px; }
+        .alert.success { background: #dcfce7; }
+        .alert.error { background: #fee2e2; }
+        ul.errors { margin: 8px 0 0; padding-left: 18px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="links">
+            <a href="{{ route('inicio') }}">Inicio</a>
+            <a href="{{ route('catalogo') }}">Catalogo</a>
+            @auth
+                <a href="{{ route('dashboard') }}">Dashboard</a>
+                <a href="{{ route('productos.index') }}">Productos</a>
+                <a href="{{ route('categorias.index') }}">Categorias</a>
+                <a href="{{ route('ventas.index') }}">Ventas</a>
+                @if(auth()->user()->esAdministrador() || auth()->user()->esGerente())
+                    <a href="{{ route('usuarios.index') }}">Usuarios</a>
+                @endif
+            @endauth
         </div>
-        <!-- Bootstrap 5 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+        <div class="links">
+            @auth
+                <span>{{ auth()->user()->nombre_completo }} ({{ auth()->user()->rol }})</span>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit">Cerrar sesion</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}">Iniciar sesion</a>
+            @endauth
+        </div>
+    </nav>
+
+    <main>
+        @if(session('status'))
+            <div class="alert success">{{ session('status') }}</div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert error">
+                <strong>Hay errores de validacion.</strong>
+                <ul class="errors">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{ $slot ?? '' }}
+        @yield('content')
+    </main>
+</body>
 </html>

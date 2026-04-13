@@ -1,17 +1,37 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@section('content')
+    <section class="grid cols-3">
+        <article class="card"><h2>{{ $totalProductos }}</h2><p>Productos registrados</p></article>
+        <article class="card"><h2>{{ $totalCategorias }}</h2><p>Categorias registradas</p></article>
+        <article class="card"><h2>{{ $totalVentas }}</h2><p>Ventas registradas</p></article>
+    </section>
+
+    <section class="card">
+        <h2>Ultimas ventas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cliente</th>
+                    <th>Vendedor</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($ventas as $venta)
+                    <tr>
+                        <td>{{ $venta->producto->nombre }}</td>
+                        <td>{{ $venta->cliente->nombre_completo }}</td>
+                        <td>{{ $venta->vendedor->nombre_completo }}</td>
+                        <td>{{ $venta->fecha->format('Y-m-d') }}</td>
+                        <td>${{ number_format($venta->total, 2) }}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="5">No hay ventas registradas.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </section>
+@endsection

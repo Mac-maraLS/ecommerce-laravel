@@ -1,30 +1,23 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
-        </div>
-    </body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title ?? 'Acceso' }}</title>
+    <style>
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg, #f5f3ff, #ffedd5); font-family: Georgia, serif; }
+        .panel { width: min(420px, calc(100% - 32px)); background: white; padding: 28px; border-radius: 20px; border: 1px solid #d6d3d1; }
+        h1 { margin-top: 0; }
+        label { display: block; margin-bottom: 14px; font-weight: 700; }
+        input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #9a3412; color: white; font: inherit; cursor: pointer; }
+        .error { color: #b91c1c; margin-bottom: 12px; }
+        .hint { margin-top: 16px; color: #57534e; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        @yield('content')
+    </div>
+</body>
 </html>
