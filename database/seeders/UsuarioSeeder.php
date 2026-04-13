@@ -13,8 +13,8 @@ class UsuarioSeeder extends Seeder
         Usuario::updateOrCreate(
             ['correo' => 'admin@tuxtla.tecnm.mx'],
             [
-                'nombre' => 'Admin',
-                'apellidos' => 'Principal',
+                'nombre' => 'Ana',
+                'apellidos' => 'Morales',
                 'clave' => Hash::make('123'),
                 'rol' => Usuario::ROL_ADMINISTRADOR,
             ]
@@ -49,7 +49,7 @@ class UsuarioSeeder extends Seeder
         }
 
         Usuario::factory()->count(1)->create([
-            'rol' => Usuario::ROL_GERENTE,
+            'rol' => Usuario::ROL_CLIENTE,
         ]);
     }
 }

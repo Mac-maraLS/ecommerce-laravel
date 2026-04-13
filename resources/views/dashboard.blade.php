@@ -2,13 +2,13 @@
 
 @section('content')
     <section class="grid cols-3">
-        <article class="card"><h2>{{ $totalProductos }}</h2><p>Productos registrados</p></article>
-        <article class="card"><h2>{{ $totalCategorias }}</h2><p>Categorias registradas</p></article>
+        <article class="card"><h2>{{ $totalProductos }}</h2><p>Productos del menu</p></article>
+        <article class="card"><h2>{{ $totalCategorias }}</h2><p>Categorias del cafe</p></article>
         <article class="card"><h2>{{ $totalVentas }}</h2><p>Ventas registradas</p></article>
     </section>
 
     <section class="card">
-        <h2>Ultimas ventas</h2>
+        <h2>Ultimas ventas en caja</h2>
         <table>
             <thead>
                 <tr>

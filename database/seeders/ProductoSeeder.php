@@ -12,37 +12,37 @@ class ProductoSeeder extends Seeder
     public function run(): void
     {
         $vendedores = Usuario::query()
-            ->whereIn('rol', [Usuario::ROL_ADMINISTRADOR, Usuario::ROL_GERENTE])
+            ->whereIn('correo', ['admin@tuxtla.tecnm.mx', 'gerente@tuxtla.tecnm.mx'])
             ->get();
 
         $productos = [
             [
-                'nombre' => 'Laptop Empresarial',
-                'descripcion' => 'Equipo de 14 pulgadas orientado a productividad.',
-                'precio' => 18500,
-                'existencia' => 8,
-                'categorias' => ['Electronica', 'Oficina'],
+                'nombre' => 'Cappuccino Clasico',
+                'descripcion' => 'Espresso con leche vaporizada y espuma cremosa, servido al momento.',
+                'precio' => 52,
+                'existencia' => 30,
+                'categorias' => ['Bebidas Calientes'],
             ],
             [
-                'nombre' => 'Silla Ergonomica',
-                'descripcion' => 'Silla ajustable para jornadas largas de trabajo.',
-                'precio' => 3200,
-                'existencia' => 12,
-                'categorias' => ['Hogar', 'Oficina'],
+                'nombre' => 'Latte Vainilla',
+                'descripcion' => 'Cafe suave con notas de vainilla y leche texturizada.',
+                'precio' => 58,
+                'existencia' => 24,
+                'categorias' => ['Bebidas Calientes'],
             ],
             [
-                'nombre' => 'Tenis Urbanos',
-                'descripcion' => 'Calzado casual para uso diario.',
-                'precio' => 1299,
-                'existencia' => 20,
-                'categorias' => ['Moda'],
+                'nombre' => 'Frappe Mocha',
+                'descripcion' => 'Bebida helada con espresso, chocolate y crema batida.',
+                'precio' => 69,
+                'existencia' => 18,
+                'categorias' => ['Bebidas Frias'],
             ],
             [
-                'nombre' => 'Lampara LED',
-                'descripcion' => 'Lampara recargable con tres niveles de intensidad.',
-                'precio' => 499,
-                'existencia' => 25,
-                'categorias' => ['Hogar', 'Electronica'],
+                'nombre' => 'Croissant de Almendra',
+                'descripcion' => 'Pan hojaldrado relleno con crema de almendra, ideal para desayuno.',
+                'precio' => 46,
+                'existencia' => 16,
+                'categorias' => ['Panaderia', 'Postres'],
             ],
         ];
 

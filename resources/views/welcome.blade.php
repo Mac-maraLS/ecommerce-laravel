@@ -2,8 +2,16 @@
 
 @section('content')
     <section class="hero">
-        <h1>Mini Proyecto 2</h1>
-        <p>Sistema e-commerce con relaciones Eloquent, roles, Policies, Gates, FormRequest, seeders y bitacoras.</p>
+        <h1>Cafe Aroma</h1>
+        <p>Una cafeteria de barrio con cafe de especialidad, bebidas frias, panaderia del dia y postres artesanales. Esta portada muestra el sistema funcionando como una pagina real antes de entrar al panel administrativo.</p>
+        <div class="actions">
+            <a class="button" href="{{ route('catalogo') }}">Ver menu</a>
+            @guest
+                <a class="button secondary" href="{{ route('login') }}">Entrar al sistema</a>
+            @else
+                <a class="button secondary" href="{{ route('dashboard') }}">Ir al dashboard</a>
+            @endguest
+        </div>
     </section>
 
     <section class="grid cols-3">

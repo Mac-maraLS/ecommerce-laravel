@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Mini Proyecto 2' }}</title>
+    <title>{{ $title ?? 'Cafe Aroma' }}</title>
     <style>
         :root {
             --bg: #f5f1ea;
@@ -14,13 +14,23 @@
             --line: #d6d3d1;
         }
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: Georgia, serif; background: var(--bg); color: var(--ink); }
+        body { margin: 0; font-family: Georgia, serif; background:
+            radial-gradient(circle at top left, #f6d7b8 0, transparent 28%),
+            radial-gradient(circle at top right, #f3e7d3 0, transparent 24%),
+            linear-gradient(180deg, #f7f2eb 0%, #efe5d6 100%);
+            color: var(--ink); }
         nav, main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
         nav { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 20px 0; }
         nav a, nav button { text-decoration: none; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
         nav .links { display: flex; flex-wrap: wrap; gap: 10px; }
+        .brand { font-size: 28px; font-weight: 700; letter-spacing: .02em; color: #7c2d12; }
         main { padding-bottom: 40px; }
-        .hero, .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px; margin-bottom: 18px; }
+        .hero, .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(120, 53, 15, .08); }
+        .hero { padding: 44px; background: linear-gradient(135deg, rgba(154,52,18,.95), rgba(120,53,15,.92)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1600&auto=format&fit=crop') center/cover; color: white; }
+        .hero h1 { font-size: clamp(38px, 6vw, 68px); margin: 0 0 12px; line-height: .95; }
+        .hero p { max-width: 620px; font-size: 18px; color: rgba(255,255,255,.9); }
+        .hero .actions { margin-top: 22px; }
+        .hero .button.secondary { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); }
         .grid { display: grid; gap: 18px; }
         .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
         .grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
@@ -44,6 +54,7 @@
 <body>
     <nav>
         <div class="links">
+            <span class="brand">Cafe Aroma</span>
             <a href="{{ route('inicio') }}">Inicio</a>
             <a href="{{ route('catalogo') }}">Catalogo</a>
             @auth
