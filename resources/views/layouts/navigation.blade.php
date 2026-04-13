@@ -177,8 +177,8 @@
         <div class="nav-links">
             @if(Auth::user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Panel Admin</a>
-            @elseif(Auth::user()->isEmpleado())
-                <a href="{{ route('empleado.dashboard') }}" class="nav-link {{ request()->routeIs('empleado.dashboard') ? 'active' : '' }}">Panel Empleado</a>
+            @elseif(Auth::user()->isGerente())
+                <a href="{{ route('empleado.dashboard') }}" class="nav-link {{ request()->routeIs('empleado.dashboard') ? 'active' : '' }}">Panel Gerente</a>
             @else
                 <a href="{{ route('cliente.dashboard') }}" class="nav-link {{ request()->routeIs('cliente.dashboard') ? 'active' : '' }}">Mi Panel</a>
             @endif
@@ -186,25 +186,25 @@
 
         <div class="nav-right">
             {{-- Carrito (solo clientes) --}}
-            @if(!Auth::user()->isAdmin() && !Auth::user()->isEmpleado())
+            @if(!Auth::user()->isAdmin() && !Auth::user()->isGerente())
                 <a href="{{ route('carrito.ver') }}" class="nav-cart">
                     🛒 Carrito
-                    <span class="cart-badge">0</span>
+                    <span class="cart-badge">{{ array_sum(array_column(session('carrito', []), 'cantidad')) }}</span>
                 </a>
             @endif
 
             {{-- Profile dropdown --}}
             <div class="profile-wrap" id="profileWrap">
                 <button class="profile-btn" onclick="toggleProfile()">
-                    <span class="profile-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
-                    <span class="profile-name">{{ Auth::user()->name }}</span>
+                    <span class="profile-avatar">{{ strtoupper(substr(Auth::user()->nombre, 0, 2)) }}</span>
+                    <span class="profile-name">{{ Auth::user()->nombre }} {{ Auth::user()->apellidos }}</span>
                     <span class="profile-chevron">▼</span>
                 </button>
                 <div class="profile-dropdown">
                     <div class="dropdown-header">
-                        <div class="d-name">{{ Auth::user()->name }}</div>
-                        <div class="d-email">{{ Auth::user()->email }}</div>
-                        <span class="d-role">{{ ucfirst(Auth::user()->role) }}</span>
+                        <div class="d-name">{{ Auth::user()->nombre }}</div>
+                        <div class="d-email">{{ Auth::user()->correo }}</div>
+                        <span class="d-role">{{ ucfirst(Auth::user()->rol) }}</span>
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -226,8 +226,8 @@
     <div class="mobile-menu" id="mobileMenu">
         @if(Auth::user()->isAdmin())
             <a href="{{ route('admin.dashboard') }}" class="mobile-link">Panel Admin</a>
-        @elseif(Auth::user()->isEmpleado())
-            <a href="{{ route('empleado.dashboard') }}" class="mobile-link">Panel Empleado</a>
+        @elseif(Auth::user()->isGerente())
+            <a href="{{ route('empleado.dashboard') }}" class="mobile-link">Panel Gerente</a>
         @else
             <a href="{{ route('cliente.dashboard') }}" class="mobile-link">☕ Mi Panel</a>
             <a href="{{ route('carrito.ver') }}" class="mobile-link">🛒 Ver Carrito</a>

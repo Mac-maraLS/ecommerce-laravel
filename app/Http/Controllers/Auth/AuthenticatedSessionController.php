@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -28,6 +29,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Bitácora: login exitoso
+        Log::channel('autenticacion')->info('Login exitoso', [
+            'usuario_id' => Auth::id(),
+            'correo'     => Auth::user()->correo,
+            'ip'         => $request->ip(),
+        ]);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -36,6 +44,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Bitácora: logout
+        if (Auth::check()) {
+            Log::channel('autenticacion')->info('Logout', [
+                'usuario_id' => Auth::id(),
+                'correo'     => Auth::user()->correo,
+                'ip'         => $request->ip(),
+            ]);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

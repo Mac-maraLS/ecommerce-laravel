@@ -2,103 +2,140 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Producto;
+use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@tienda.test'],
+        // ── Usuarios base ────────────────────────────────────────────────────
+        $admin = Usuario::updateOrCreate(
+            ['correo' => 'admin@tienda.test'],
             [
-                'name' => 'Administrador',
-                'role' => User::ROLE_ADMIN,
-                'password' => Hash::make('password'),
+                'nombre'    => 'Administrador',
+                'apellidos' => 'Sistema',
+                'clave'     => Hash::make('password'),
+                'rol'       => 'administrador',
             ]
         );
 
-        User::updateOrCreate(
-            ['email' => 'empleado@tienda.test'],
+        $gerente = Usuario::updateOrCreate(
+            ['correo' => 'gerente@tienda.test'],
             [
-                'name' => 'Empleado',
-                'role' => User::ROLE_EMPLEADO,
-                'password' => Hash::make('password'),
+                'nombre'    => 'Gerente',
+                'apellidos' => 'Tienda',
+                'clave'     => Hash::make('password'),
+                'rol'       => 'gerente',
             ]
         );
 
-        User::updateOrCreate(
-            ['email' => 'cliente@tienda.test'],
+        $cliente = Usuario::updateOrCreate(
+            ['correo' => 'cliente@tienda.test'],
             [
-                'name' => 'Cliente',
-                'role' => User::ROLE_CLIENTE,
-                'password' => Hash::make('password'),
+                'nombre'    => 'Cliente',
+                'apellidos' => 'Demo',
+                'clave'     => Hash::make('password'),
+                'rol'       => 'cliente',
             ]
         );
 
-        $productos = [
+        // ── Usuarios generados con factory ───────────────────────────────────
+        // (evitar duplicados de correo usando try/catch)
+        for ($i = 0; $i < 5; $i++) {
+            try {
+                Usuario::factory()->create();
+            } catch (\Exception $e) {
+                // ignorar duplicados de correo
+            }
+        }
+
+        // ── Categorías (Punto 5) ─────────────────────────────────────────────
+        $catBebidas = \App\Models\Categoria::create(['nombre' => 'Bebidas Calientes', 'descripcion' => 'Cafés, tés y más']);
+        $catFrappes = \App\Models\Categoria::create(['nombre' => 'Frappés', 'descripcion' => 'Bebidas frías y mezcladas']);
+        $catPostres = \App\Models\Categoria::create(['nombre' => 'Postres', 'descripcion' => 'Delicias dulces']);
+
+        // ── Productos (vendedor = gerente) ───────────────────────────────────
+        $productosData = [
             [
-                'name' => 'Cappuccino Clásico',
-                'category' => 'bebidas_calientes',
-                'description' => 'Espresso con leche vaporizada y espuma cremosa.',
-                'price' => 45.00,
-                'stock' => 50,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Cappuccino Clásico',
+                    'descripcion' => 'Espresso con leche vaporizada y espuma cremosa.',
+                    'precio'      => 45.00,
+                    'existencia'  => 50,
+                    'imagen'      => null,
+                    'usuario_id'  => $gerente->id,
+                ],
+                'categorias' => [$catBebidas->id]
             ],
             [
-                'name' => 'Frappé de Moka',
-                'category' => 'frappes',
-                'description' => 'Mezcla helada de espresso, chocolate y crema.',
-                'price' => 65.00,
-                'stock' => 30,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Frappé de Moka',
+                    'descripcion' => 'Mezcla helada de espresso, chocolate y crema.',
+                    'precio'      => 65.00,
+                    'existencia'  => 30,
+                    'imagen'      => null,
+                    'usuario_id'  => $gerente->id,
+                ],
+                'categorias' => [$catFrappes->id]
             ],
             [
-                'name' => 'Cheesecake',
-                'category' => 'postres',
-                'description' => 'Base de galleta, relleno cremoso y frambuesa.',
-                'price' => 55.00,
-                'stock' => 15,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Cheesecake',
+                    'descripcion' => 'Base de galleta, relleno cremoso y frambuesa.',
+                    'precio'      => 55.00,
+                    'existencia'  => 15,
+                    'imagen'      => null,
+                    'usuario_id'  => $admin->id,
+                ],
+                'categorias' => [$catPostres->id]
             ],
             [
-                'name' => 'Latte Macchiato',
-                'category' => 'bebidas_calientes',
-                'description' => 'Leche caliente con un toque de espresso intenso.',
-                'price' => 50.00,
-                'stock' => 40,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Latte Macchiato',
+                    'descripcion' => 'Leche caliente con un toque de espresso intenso.',
+                    'precio'      => 50.00,
+                    'existencia'  => 40,
+                    'imagen'      => null,
+                    'usuario_id'  => $gerente->id,
+                ],
+                'categorias' => [$catBebidas->id]
             ],
             [
-                'name' => 'Croissant de Almendra',
-                'category' => 'postres',
-                'description' => 'Pan del día cubierto de almendras tostadas.',
-                'price' => 35.00,
-                'stock' => 20,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Croissant de Almendra',
+                    'descripcion' => 'Pan del día cubierto de almendras tostadas.',
+                    'precio'      => 35.00,
+                    'existencia'  => 20,
+                    'imagen'      => null,
+                    'usuario_id'  => $gerente->id,
+                ],
+                'categorias' => [$catPostres->id]
             ],
             [
-                'name' => 'Americano',
-                'category' => 'bebidas_calientes',
-                'description' => 'Espresso diluido en agua caliente, puro y limpio.',
-                'price' => 38.00,
-                'stock' => 100,
-                'image' => null,
+                'data' => [
+                    'nombre'      => 'Americano',
+                    'descripcion' => 'Espresso diluido en agua caliente, puro y limpio.',
+                    'precio'      => 38.00,
+                    'existencia'  => 100,
+                    'imagen'      => null,
+                    'usuario_id'  => $admin->id,
+                ],
+                'categorias' => [$catBebidas->id]
             ],
         ];
 
-        foreach ($productos as $producto) {
-            \App\Models\Product::updateOrCreate(
-                ['name' => $producto['name']],
-                $producto
+        foreach ($productosData as $prod) {
+            $producto = Producto::updateOrCreate(
+                ['nombre' => $prod['data']['nombre']],
+                $prod['data']
             );
+            $producto->categorias()->sync($prod['categorias']);
         }
     }
 }

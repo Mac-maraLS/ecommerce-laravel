@@ -1,52 +1,104 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+    <div class="space-y-8">
+        <div class="rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-amber-50 p-8 shadow-xl shadow-slate-200/60">
+            <div class="mb-8">
+                <p class="text-sm font-semibold uppercase tracking-[0.35em] text-amber-600">Tu tienda</p>
+                <h1 class="mt-3 text-3xl font-black tracking-tight text-slate-900">Crear cuenta</h1>
+                <p class="mt-3 text-sm leading-6 text-slate-600">
+                    Registrate para acceder al catalogo y realizar compras.
+                </p>
+            </div>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <form method="POST" action="{{ route('register') }}" class="space-y-5">
+                @csrf
+
+                {{-- Nombre --}}
+                <div>
+                    <label for="nombre" class="mb-2 block text-sm font-semibold text-slate-800">Nombre(s)</label>
+                    <input
+                        id="nombre"
+                        class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                        type="text"
+                        name="nombre"
+                        value="{{ old('nombre') }}"
+                        placeholder="Ej. Juan"
+                        required autofocus autocomplete="given-name"
+                    />
+                    <x-input-error :messages="$errors->get('nombre')" class="mt-2 text-sm text-red-600" />
+                </div>
+
+                {{-- Apellidos --}}
+                <div>
+                    <label for="apellidos" class="mb-2 block text-sm font-semibold text-slate-800">Apellidos</label>
+                    <input
+                        id="apellidos"
+                        class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                        type="text"
+                        name="apellidos"
+                        value="{{ old('apellidos') }}"
+                        placeholder="Ej. Lopez Martinez"
+                        required autocomplete="family-name"
+                    />
+                    <x-input-error :messages="$errors->get('apellidos')" class="mt-2 text-sm text-red-600" />
+                </div>
+
+                {{-- Correo --}}
+                <div>
+                    <label for="correo" class="mb-2 block text-sm font-semibold text-slate-800">Correo electronico</label>
+                    <input
+                        id="correo"
+                        class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                        type="email"
+                        name="correo"
+                        value="{{ old('correo') }}"
+                        placeholder="nombre@correo.com"
+                        required autocomplete="username"
+                    />
+                    <x-input-error :messages="$errors->get('correo')" class="mt-2 text-sm text-red-600" />
+                </div>
+
+                {{-- Clave --}}
+                <div>
+                    <label for="clave" class="mb-2 block text-sm font-semibold text-slate-800">Contrasena</label>
+                    <input
+                        id="clave"
+                        class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                        type="password"
+                        name="clave"
+                        placeholder="Minimo 8 caracteres"
+                        required autocomplete="new-password"
+                    />
+                    <x-input-error :messages="$errors->get('clave')" class="mt-2 text-sm text-red-600" />
+                </div>
+
+                {{-- Confirmar clave --}}
+                <div>
+                    <label for="clave_confirmation" class="mb-2 block text-sm font-semibold text-slate-800">Confirmar contrasena</label>
+                    <input
+                        id="clave_confirmation"
+                        class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                        type="password"
+                        name="clave_confirmation"
+                        placeholder="Repite tu contrasena"
+                        required autocomplete="new-password"
+                    />
+                    <x-input-error :messages="$errors->get('clave_confirmation')" class="mt-2 text-sm text-red-600" />
+                </div>
+
+                <button
+                    type="submit"
+                    class="inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
+                >
+                    Registrarme
+                </button>
+            </form>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+        <div class="text-center text-sm text-slate-600">
+            Ya tienes cuenta?
+            <a href="{{ route('login') }}" class="font-semibold text-amber-700 transition hover:text-amber-800">
+                Inicia sesion aqui
             </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
         </div>
-    </form>
+    </div>
 </x-guest-layout>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Producto;
+use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -11,29 +13,30 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        return match ($user->role) {
-            'admin' => redirect()->route('admin.dashboard'),
-            'empleado' => redirect()->route('empleado.dashboard'),
-            default => redirect()->route('cliente.dashboard'),
+        return match ($user->rol) {
+            'administrador' => redirect()->route('admin.dashboard'),
+            'gerente'       => redirect()->route('empleado.dashboard'),
+            default         => redirect()->route('cliente.dashboard'),
         };
     }
 
     public function admin(): View
     {
-        $users = \App\Models\User::all();
-        $productsCount = \App\Models\Product::count();
+        $users        = Usuario::all();
+        $productsCount = Producto::count();
         return view('dashboards.admin', compact('users', 'productsCount'));
     }
 
     public function empleado(): View
     {
-        $productos = \App\Models\Product::all();
+        $productos = Producto::with('usuario')->get();
         return view('dashboards.empleado', compact('productos'));
     }
 
     public function cliente(): View
     {
-        $productos = \App\Models\Product::all();
-        return view('dashboards.cliente', compact('productos'));
+        $productos = Producto::with('usuario', 'categorias')->get();
+        $categorias = \App\Models\Categoria::all();
+        return view('dashboards.cliente', compact('productos', 'categorias'));
     }
 }

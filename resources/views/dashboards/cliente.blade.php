@@ -68,9 +68,9 @@
                 <div class="sidebar-card">
                     <p class="sidebar-label">Categorías</p>
                     <button class="cat-btn active" data-cat="todos">Todos <span class="cat-count">{{ $productos->count() }}</span></button>
-                    <button class="cat-btn" data-cat="bebidas_calientes">Bebidas Calientes <span class="cat-count">{{ $productos->where('category', 'bebidas_calientes')->count() }}</span></button>
-                    <button class="cat-btn" data-cat="frappes">Frappés <span class="cat-count">{{ $productos->where('category', 'frappes')->count() }}</span></button>
-                    <button class="cat-btn" data-cat="postres">Postres <span class="cat-count">{{ $productos->where('category', 'postres')->count() }}</span></button>
+                    @foreach($categorias as $cat)
+                    <button class="cat-btn" data-cat="{{ $cat->id }}">{{ $cat->nombre }} <span class="cat-count">{{ $productos->filter(fn($p) => $p->categorias->contains('id', $cat->id))->count() }}</span></button>
+                    @endforeach
                 </div>
             </aside>
 
@@ -79,14 +79,14 @@
                 <div class="products-grid" id="productsGrid">
                     @if(count($productos) > 0)
                         @foreach($productos as $producto)
-                        <div class="product-card" data-categoria="{{ $producto->category }}">
-                            <img src="{{ $producto->image ? asset('storage/' . $producto->image) : 'https://images.unsplash.com/photo-1534685302058-75644251eb1f?q=80&w=600&auto=format&fit=crop' }}" alt="{{ $producto->name }}" loading="lazy">
+                        <div class="product-card" data-categoria="{{ $producto->categorias->pluck('id')->join(',') }}">
+                            <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : 'https://images.unsplash.com/photo-1534685302058-75644251eb1f?q=80&w=600&auto=format&fit=crop' }}" alt="{{ $producto->nombre }}" loading="lazy">
                             <div class="card-body">
-                                <p class="card-cat">{{ ucwords(str_replace('_', ' ', $producto->category)) }}</p>
-                                <h3 class="card-name">{{ $producto->name }}</h3>
-                                <p class="card-desc">{{ $producto->description }}</p>
+                                <p class="card-cat">{{ $producto->categorias->pluck('nombre')->join(', ') }}</p>
+                                <h3 class="card-name">{{ $producto->nombre }}</h3>
+                                <p class="card-desc">{{ $producto->descripcion }}</p>
                                 <div class="card-footer">
-                                    <span class="card-price">${{ number_format($producto->price, 2) }}</span>
+                                    <span class="card-price">${{ number_format($producto->precio, 2) }}</span>
                                     <form action="{{ route('carrito.agregar') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="producto_id" value="{{ $producto->id }}">
@@ -126,8 +126,8 @@
             let visible = 0;
 
             cards.forEach(card => {
-                const cardCat = card.dataset.categoria;
-                if (selected === 'todos' || cardCat === selected) {
+                const cardCats = card.dataset.categoria.split(',');
+                if (selected === 'todos' || cardCats.includes(selected)) {
                     card.classList.remove('hidden-card');
                     visible++;
                 } else {

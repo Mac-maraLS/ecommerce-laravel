@@ -173,10 +173,10 @@
                     <tbody>
                         @forelse($productos as $p)
                         <tr>
-                            <td style="font-weight:600;">{{ $p->name }}</td>
-                            <td>{{ $p->stock }}</td>
+                            <td style="font-weight:600;">{{ $p->nombre }}</td>
+                            <td>{{ $p->existencia }}</td>
                             <td>
-                                @if($p->stock > 0)
+                                @if($p->existencia > 0)
                                     <span class="badge badge-done">Disponible</span>
                                 @else
                                     <span class="badge badge-out">Agotado</span>
@@ -186,7 +186,7 @@
                                 <div style="display:flex; gap:6px; align-items:center;">
                                     <form action="{{ route('products.toggleStock', $p->id) }}" method="POST" style="margin:0;">
                                         @csrf
-                                        @if($p->stock > 0)
+                                        @if($p->existencia > 0)
                                             <button type="submit" class="btn-danger">Agotar</button>
                                         @else
                                             <button type="submit" class="btn-outline">Activar</button>
@@ -222,15 +222,6 @@
                     <label>Nombre del Producto</label>
                     <input type="text" name="nombre" required placeholder="Ej. Latte Vainilla">
                 </div>
-                <div class="form-field">
-                    <label>Categoría</label>
-                    <select name="categoria" required>
-                        <option value="" disabled selected>Selecciona...</option>
-                        <option value="bebidas_calientes">Bebidas Calientes</option>
-                        <option value="frappes">Frappés</option>
-                        <option value="postres">Postres</option>
-                    </select>
-                </div>
                 <div class="form-row">
                     <div class="form-field">
                         <label>Precio ($)</label>
@@ -238,7 +229,7 @@
                     </div>
                     <div class="form-field">
                         <label>Stock inicial</label>
-                        <input type="number" name="stock" required placeholder="0">
+                        <input type="number" name="existencia" required placeholder="0">
                     </div>
                 </div>
                 <div class="form-field">
@@ -273,14 +264,6 @@
                     <label>Nombre del Producto</label>
                     <input type="text" name="nombre" id="edit_nombre" required>
                 </div>
-                <div class="form-field">
-                    <label>Categoría</label>
-                    <select name="categoria" id="edit_categoria" required>
-                        <option value="bebidas_calientes">Bebidas Calientes</option>
-                        <option value="frappes">Frappés</option>
-                        <option value="postres">Postres</option>
-                    </select>
-                </div>
                 <div class="form-row">
                     <div class="form-field">
                         <label>Precio ($)</label>
@@ -288,7 +271,7 @@
                     </div>
                     <div class="form-field">
                         <label>Stock actual</label>
-                        <input type="number" name="stock" id="edit_stock" required>
+                        <input type="number" name="existencia" id="edit_stock" required>
                     </div>
                 </div>
                 <div class="form-field">
@@ -318,11 +301,10 @@
 <script>
     function openEditModal(product) {
         // Rellenar formulario
-        document.getElementById('edit_nombre').value = product.name;
-        document.getElementById('edit_categoria').value = product.category;
-        document.getElementById('edit_precio').value = product.price;
-        document.getElementById('edit_stock').value = product.stock;
-        document.getElementById('edit_descripcion').value = product.description;
+        document.getElementById('edit_nombre').value = product.nombre;
+        document.getElementById('edit_precio').value = product.precio;
+        document.getElementById('edit_stock').value = product.existencia;
+        document.getElementById('edit_descripcion').value = product.descripcion;
 
         // Configurar acción del formulario PUT
         const form = document.getElementById('editProductForm');

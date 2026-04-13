@@ -60,13 +60,13 @@
 @foreach($products as $product)
     <div class="card">
 
-        @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}">
+        @if($product->imagen)
+            <img src="{{ asset('storage/' . $product->imagen) }}">
         @endif
 
-        <h3>{{ $product->name }}</h3>
-        <p>{{ $product->description }}</p>
-        <p class="price">$ {{ $product->price }}</p>
+        <h3>{{ $product->nombre }}</h3>
+        <p>{{ $product->descripcion }}</p>
+        <p class="price">$ {{ $product->precio }}</p>
 
     </div>
 @endforeach

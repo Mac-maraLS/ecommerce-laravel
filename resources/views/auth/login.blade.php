@@ -18,49 +18,40 @@
                 @csrf
 
                 <div>
-                    <label for="email" class="mb-2 block text-sm font-semibold text-slate-800">
+                    <label for="correo" class="mb-2 block text-sm font-semibold text-slate-800">
                         Correo electronico
                     </label>
                     <input
-                        id="email"
+                        id="correo"
                         class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
                         type="email"
-                        name="email"
-                        value="{{ old('email') }}"
+                        name="correo"
+                        value="{{ old('correo') }}"
                         placeholder="nombre@correo.com"
                         required
                         autofocus
                         autocomplete="username"
                     />
-                    <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600" />
+                    <x-input-error :messages="$errors->get('correo')" class="mt-2 text-sm text-red-600" />
                 </div>
 
                 <div>
                     <div class="mb-2 flex items-center justify-between gap-4">
-                        <label for="password" class="block text-sm font-semibold text-slate-800">
+                        <label for="clave" class="block text-sm font-semibold text-slate-800">
                             Contrasena
                         </label>
-
-                        @if (Route::has('password.request'))
-                            <a
-                                class="text-sm font-medium text-amber-700 transition hover:text-amber-800"
-                                href="{{ route('password.request') }}"
-                            >
-                                Olvidaste tu contrasena?
-                            </a>
-                        @endif
                     </div>
 
                     <input
-                        id="password"
+                        id="clave"
                         class="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
                         type="password"
-                        name="password"
+                        name="clave"
                         placeholder="Escribe tu contrasena"
                         required
                         autocomplete="current-password"
                     />
-                    <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
+                    <x-input-error :messages="$errors->get('clave')" class="mt-2 text-sm text-red-600" />
                 </div>
 
                 <div class="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3">

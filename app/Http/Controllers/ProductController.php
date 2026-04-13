@@ -2,92 +2,115 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Http\Requests\StoreProductoRequest;
+use App\Http\Requests\UpdateProductoRequest;
+use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $this->authorize('viewAny', Producto::class);
+
+        $products = Producto::with('usuario')->get();
         return view('products.index', compact('products'));
     }
 
     public function create()
     {
+        $this->authorize('create', Producto::class);
         return view('products.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
-        $data = $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string',
-            'precio'      => 'required|numeric',
-            'stock'       => 'required|integer',
-            'descripcion' => 'required|string|max:500',
-            'imagen'      => 'required|image|max:2048'
-        ]);
+        $this->authorize('create', Producto::class);
 
-        $productData = [
-            'name'        => $data['nombre'],
-            'category'    => $data['categoria'],
-            'price'       => $data['precio'],
-            'stock'       => $data['stock'],
-            'description' => $data['descripcion'],
+        $data = $request->validated();
+
+        $productoData = [
+            'nombre'      => $data['nombre'],
+            'precio'      => $data['precio'],
+            'existencia'  => $data['existencia'],
+            'descripcion' => $data['descripcion'],
+            'usuario_id'  => auth()->id(),
         ];
 
         if ($request->hasFile('imagen')) {
-            $productData['image'] = $request->file('imagen')->store('productos', 'public');
+            $productoData['imagen'] = $request->file('imagen')->store('productos', 'public');
         }
 
-        Product::create($productData);
+        $producto = Producto::create($productoData);
+
+        // Bitácora
+        Log::channel('productos')->info('Producto creado', [
+            'producto_id' => $producto->id,
+            'nombre'      => $producto->nombre,
+            'usuario_id'  => auth()->id(),
+            'ip'          => $request->ip(),
+        ]);
 
         return back()->with('success', '¡Producto "' . $data['nombre'] . '" agregado correctamente al inventario!');
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductoRequest $request, Producto $product)
     {
-        $data = $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string',
-            'precio'      => 'required|numeric',
-            'stock'       => 'required|integer',
-            'descripcion' => 'required|string|max:500',
-            'imagen'      => 'nullable|image|max:2048'
-        ]);
+        $this->authorize('update', $product);
 
-        $productData = [
-            'name'        => $data['nombre'],
-            'category'    => $data['categoria'],
-            'price'       => $data['precio'],
-            'stock'       => $data['stock'],
-            'description' => $data['descripcion'],
+        $data = $request->validated();
+
+        $productoData = [
+            'nombre'      => $data['nombre'],
+            'precio'      => $data['precio'],
+            'existencia'  => $data['existencia'],
+            'descripcion' => $data['descripcion'],
         ];
 
         if ($request->hasFile('imagen')) {
-            $productData['image'] = $request->file('imagen')->store('productos', 'public');
+            $productoData['imagen'] = $request->file('imagen')->store('productos', 'public');
         }
 
-        $product->update($productData);
+        $product->update($productoData);
+
+        // Bitácora
+        Log::channel('productos')->info('Producto editado', [
+            'producto_id' => $product->id,
+            'nombre'      => $product->nombre,
+            'usuario_id'  => auth()->id(),
+            'ip'          => $request->ip(),
+        ]);
 
         return back()->with('success', '¡Producto "' . $data['nombre'] . '" actualizado correctamente!');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Producto $product)
     {
+        $this->authorize('delete', $product);
+
+        $nombre = $product->nombre;
         $product->delete();
+
+        // Bitácora
+        Log::channel('productos')->info('Producto eliminado', [
+            'nombre'     => $nombre,
+            'usuario_id' => auth()->id(),
+            'ip'         => request()->ip(),
+        ]);
+
         return back()->with('success', 'Producto eliminado.');
     }
 
-    public function toggleStock(Product $product)
+    public function toggleStock(Producto $product)
     {
-        // Si tiene stock lo pone en 0, si está en 0 lo restaura a 10 (por defecto)
-        if ($product->stock > 0) {
-            $product->update(['stock' => 0]);
+        $this->authorize('update', $product);
+
+        if ($product->existencia > 0) {
+            $product->update(['existencia' => 0]);
             $msg = 'Producto marcado como agotado.';
         } else {
-            $product->update(['stock' => 10]);
+            $product->update(['existencia' => 10]);
             $msg = 'Stock restaurado a 10 unidades.';
         }
         return back()->with('success', $msg);
@@ -95,7 +118,7 @@ class ProductController extends Controller
 
     public function catalogo()
     {
-        $products = Product::all();
+        $products = Producto::with('usuario')->get();
         return view('catalogo', compact('products'));
     }
 }

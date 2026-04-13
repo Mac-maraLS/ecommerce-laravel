@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreUsuarioRequest;
+use App\Models\Usuario;
+use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
-    public function store(\Illuminate\Http\Request $request)
+    public function store(StoreUsuarioRequest $request)
     {
-        $data = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'role'     => 'required|in:admin,empleado,cliente',
-            'password' => 'required|string|min:8',
-        ]);
+        $this->authorize('create', Usuario::class);
 
-        $data['password'] = \Illuminate\Support\Facades\Hash::make($data['password']);
+        $data = $request->validated();
+        $data['clave'] = Hash::make($data['clave']);
 
-        \App\Models\User::create($data);
+        $usuario = Usuario::create($data);
 
-        return back()->with('success', '¡Usuario "' . $data['name'] . '" creado exitosamente!');
+        return back()->with('success', '¡Usuario "' . $usuario->nombre . '" creado exitosamente!');
     }
-    public function destroy(\App\Models\User $user)
+
+    public function destroy(Usuario $user)
     {
+        $this->authorize('delete', $user);
+
         $user->delete();
         return back()->with('success', 'Usuario eliminado correctamente.');
     }

@@ -15,7 +15,7 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (! $user || ! in_array($user->role, $roles, true)) {
+        if (! $user || ! in_array($user->rol, $roles, true)) {
             abort(403, 'No tienes permiso para entrar a esta area.');
         }
 

@@ -136,15 +136,15 @@
                         @foreach($users as $user)
                         <tr>
                             <td>
-                                <span class="avatar">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
-                                <strong>{{ $user->name }}</strong>
+                                <span class="avatar">{{ strtoupper(substr($user->nombre, 0, 2)) }}</span>
+                                <strong>{{ $user->nombre }} {{ $user->apellidos }}</strong>
                             </td>
-                            <td style="color:var(--text-muted);">{{ $user->email }}</td>
+                            <td style="color:var(--text-muted);">{{ $user->correo }}</td>
                             <td>
-                                @if($user->role == 'admin')
+                                @if($user->rol == 'administrador')
                                     <span class="badge badge-admin">Administrador</span>
-                                @elseif($user->role == 'empleado')
-                                    <span class="badge badge-emp">Empleado</span>
+                                @elseif($user->rol == 'gerente')
+                                    <span class="badge badge-emp">Gerente</span>
                                 @else
                                     <span class="badge badge-cli">Cliente</span>
                                 @endif
@@ -155,8 +155,8 @@
                             <td style="text-align:right;">
                                 <div style="display:inline-flex;gap:6px;">
                                     <button class="btn-outline">Editar</button>
-                                    @if($user->role !== 'admin')
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar a {{ $user->name }}?');">
+                                    @if($user->rol !== 'administrador')
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar a {{ $user->nombre }}?');">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn-danger">Eliminar</button>
                                     </form>
@@ -184,24 +184,28 @@
             @csrf
             <div class="modal-body-inner">
                 <div class="form-field">
-                    <label>Nombre Completo</label>
-                    <input type="text" name="name" required placeholder="Ej. Mariana Ríos">
+                    <label>Nombre(s)</label>
+                    <input type="text" name="nombre" required placeholder="Ej. Mariana">
+                </div>
+                <div class="form-field">
+                    <label>Apellidos</label>
+                    <input type="text" name="apellidos" required placeholder="Ej. Ríos">
                 </div>
                 <div class="form-field">
                     <label>Correo Electrónico</label>
-                    <input type="email" name="email" required placeholder="correo@ejemplo.com">
+                    <input type="email" name="correo" required placeholder="correo@ejemplo.com">
                 </div>
                 <div class="form-field">
                     <label>Rol</label>
-                    <select name="role" required>
+                    <select name="rol" required>
                         <option value="cliente" selected>Cliente</option>
-                        <option value="empleado">Empleado</option>
-                        <option value="admin">Administrador</option>
+                        <option value="gerente">Gerente</option>
+                        <option value="administrador">Administrador</option>
                     </select>
                 </div>
                 <div class="form-field">
                     <label>Contraseña Temporal</label>
-                    <input type="password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres">
+                    <input type="password" name="clave" required minlength="8" placeholder="Mínimo 8 caracteres">
                 </div>
             </div>
             <div class="modal-foot">
