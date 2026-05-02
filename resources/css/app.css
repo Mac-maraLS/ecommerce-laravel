@@ -1,3 +1,92 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 🔥 FUENTE GLOBAL */
+body {
+    @apply bg-gray-100 text-gray-800 font-sans;
+}
+
+/* 🔥 CONTENEDOR */
+.container {
+    @apply max-w-6xl mx-auto px-4;
+}
+
+/* 🔥 NAVBAR */
+.navbar {
+    @apply flex justify-between items-center bg-white shadow px-6 py-4;
+}
+
+.nav-links a {
+    @apply text-gray-700 font-medium hover:text-amber-600 transition;
+}
+
+.btn {
+    @apply px-4 py-2 rounded-lg font-semibold transition;
+}
+
+.btn-primary {
+    @apply bg-amber-600 text-white hover:bg-amber-700;
+}
+
+.btn-secondary {
+    @apply bg-gray-800 text-white hover:bg-gray-900;
+}
+
+/* 🔥 TITULOS */
+.title {
+    @apply text-3xl font-bold mb-4;
+}
+
+.subtitle {
+    @apply text-xl text-gray-600 mb-6;
+}
+
+/* 🔥 FORMULARIOS */
+.form-group {
+    @apply mb-4;
+}
+
+.input {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400;
+}
+
+.textarea {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-2;
+}
+
+.label {
+    @apply block text-sm font-semibold mb-1;
+}
+
+/* 🔥 TARJETAS (PRODUCTOS) */
+.card {
+    @apply bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition;
+}
+
+.card-title {
+    @apply text-lg font-bold;
+}
+
+.card-price {
+    @apply text-amber-600 font-semibold;
+}
+
+/* 🔥 GRID */
+.grid-products {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+/* 🔥 ALERTAS */
+.alert-error {
+    @apply bg-red-100 text-red-700 p-3 rounded mb-4;
+}
+
+.alert-success {
+    @apply bg-green-100 text-green-700 p-3 rounded mb-4;
+}
+
+/* 🔥 BOTÓN FULL */
+.btn-full {
+    @apply w-full bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800;
+}

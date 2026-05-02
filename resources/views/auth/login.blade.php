@@ -1,16 +1,31 @@
+@extends('layouts.app')
+
+@section('content')
+
+<h1 class="title">Iniciar Sesión</h1>
+
+@if(session('error'))
+    <div class="alert-error">{{ session('error') }}</div>
+@endif
+
 @if(session('success'))
-    <p style="color:green">{{ session('success') }}</p>
+    <div class="alert-success">{{ session('success') }}</div>
 @endif
 
 <form method="POST" action="/login">
     @csrf
 
-    <input type="text" name="correo" placeholder="Correo"><br>
-    <input type="password" name="clave" placeholder="Contraseña"><br>
+    <div class="form-group">
+        <label class="label">Correo</label>
+        <input type="text" name="correo" class="input">
+    </div>
 
-    <button type="submit">Login</button>
+    <div class="form-group">
+        <label class="label">Contraseña</label>
+        <input type="password" name="clave" class="input">
+    </div>
 
-    @if(session('error'))
-        <p>{{ session('error') }}</p>
-    @endif
+    <button class="btn-full">Entrar</button>
 </form>
+
+@endsection

@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreProductoRequest;
+use App\Http\Requests\UpdateProductoRequest;
+
+// 🔥 IMPORTANTE
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    // 🔥 ESTO SOLUCIONA EL ERROR
+    use AuthorizesRequests;
+
     public function index()
     {
         $products = Product::all();
@@ -15,82 +24,66 @@ class ProductController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Product::class);
         return view('products.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
-        $data = $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string',
-            'precio'      => 'required|numeric',
-            'stock'       => 'required|integer',
-            'descripcion' => 'required|string|max:500',
-            'imagen'      => 'required|image|max:2048'
+        $product = Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'usuario_id' => auth()->id()
         ]);
 
-        $productData = [
-            'name'        => $data['nombre'],
-            'category'    => $data['categoria'],
-            'price'       => $data['precio'],
-            'stock'       => $data['stock'],
-            'description' => $data['descripcion'],
-        ];
+        // 🔥 LOG
+        Log::channel('productos')->info('Producto creado', [
+            'usuario_id' => auth()->id(),
+            'producto_id' => $product->id
+        ]);
 
-        if ($request->hasFile('imagen')) {
-            $productData['image'] = $request->file('imagen')->store('productos', 'public');
-        }
-
-        Product::create($productData);
-
-        return back()->with('success', '¡Producto "' . $data['nombre'] . '" agregado correctamente al inventario!');
+        return redirect('/products');
     }
 
-    public function update(Request $request, Product $product)
+    public function edit(Product $product)
     {
-        $data = $request->validate([
-            'nombre'      => 'required|string|max:255',
-            'categoria'   => 'required|string',
-            'precio'      => 'required|numeric',
-            'stock'       => 'required|integer',
-            'descripcion' => 'required|string|max:500',
-            'imagen'      => 'nullable|image|max:2048'
+        $this->authorize('update', $product);
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(UpdateProductoRequest $request, Product $product)
+    {
+        $this->authorize('update', $product);
+
+        $product->update([
+            'name' => $request->nombre,
+            'description' => $request->descripcion,
+            'price' => $request->precio,
+            'stock' => $request->stock,
         ]);
 
-        $productData = [
-            'name'        => $data['nombre'],
-            'category'    => $data['categoria'],
-            'price'       => $data['precio'],
-            'stock'       => $data['stock'],
-            'description' => $data['descripcion'],
-        ];
+        Log::channel('productos')->info('Producto actualizado', [
+            'usuario_id' => auth()->id(),
+            'producto_id' => $product->id
+        ]);
 
-        if ($request->hasFile('imagen')) {
-            $productData['image'] = $request->file('imagen')->store('productos', 'public');
-        }
-
-        $product->update($productData);
-
-        return back()->with('success', '¡Producto "' . $data['nombre'] . '" actualizado correctamente!');
+        return redirect('/products');
     }
 
     public function destroy(Product $product)
     {
-        $product->delete();
-        return back()->with('success', 'Producto eliminado.');
-    }
+        $this->authorize('delete', $product);
 
-    public function toggleStock(Product $product)
-    {
-        // Si tiene stock lo pone en 0, si está en 0 lo restaura a 10 (por defecto)
-        if ($product->stock > 0) {
-            $product->update(['stock' => 0]);
-            $msg = 'Producto marcado como agotado.';
-        } else {
-            $product->update(['stock' => 10]);
-            $msg = 'Stock restaurado a 10 unidades.';
-        }
-        return back()->with('success', $msg);
+        $product->delete();
+
+        Log::channel('productos')->warning('Producto eliminado', [
+            'usuario_id' => auth()->id(),
+            'producto_id' => $product->id
+        ]);
+
+        return redirect('/products');
     }
 
     public function catalogo()

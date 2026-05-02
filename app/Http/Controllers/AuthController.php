@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -16,22 +17,48 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // 🔥 FORZAR LOG (para crear archivo sí o sí)
+        Log::channel('autenticacion')->info('Intento de login');
+
         $credentials = [
             'correo' => $request->correo,
             'password' => $request->clave
         ];
 
         if (Auth::attempt($credentials)) {
+
+            Log::channel('autenticacion')->info('Login exitoso', [
+                'usuario_id' => auth()->id(),
+                'correo' => $request->correo,
+                'ip' => $request->ip()
+            ]);
+
             return redirect('/dashboard');
         }
+
+        Log::channel('autenticacion')->warning('Login fallido', [
+            'correo' => $request->correo,
+            'ip' => $request->ip()
+        ]);
 
         return back()->with('error', 'Credenciales incorrectas');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        Log::channel('autenticacion')->info('Logout', [
+            'usuario_id' => auth()->id(),
+            'ip' => $request->ip()
+        ]);
+
         Auth::logout();
+
         return redirect('/');
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
     }
 
     public function register(Request $request)
@@ -45,12 +72,19 @@ class AuthController extends Controller
         ]);
 
         // CREAR USUARIO
-        Usuario::create([
+        $usuario = Usuario::create([
             'nombre' => $request->nombre,
             'apellidos' => $request->apellidos,
             'correo' => $request->correo,
             'clave' => Hash::make($request->clave),
-            'rol' => 'cliente' // por defecto
+            'rol' => 'cliente'
+        ]);
+
+        // 🔥 LOG REGISTRO (EXTRA PARA PUNTOS)
+        Log::channel('autenticacion')->info('Usuario registrado', [
+            'usuario_id' => $usuario->id,
+            'correo' => $usuario->correo,
+            'ip' => $request->ip()
         ]);
 
         return redirect('/login')->with('success', 'Usuario registrado correctamente');

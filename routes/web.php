@@ -63,8 +63,6 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::get('/register', function () {
-    return view('auth.register');
-});
+Route::get('/register', [AuthController::class, 'showRegister']);
 
 Route::post('/register', [AuthController::class, 'register']);

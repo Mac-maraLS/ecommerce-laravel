@@ -52,6 +52,24 @@ return [
 
     'channels' => [
 
+        'autenticacion' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/autenticacion.log'),
+            'level' => 'info',
+        ],
+
+        'productos' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/productos.log'),
+            'level' => 'info',
+        ],
+
+        'ventas' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/ventas.log'),
+            'level' => 'info',
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),
