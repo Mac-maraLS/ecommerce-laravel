@@ -7,17 +7,9 @@ use App\Models\Usuario;
 
 class UsuarioSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        Usuario::factory()->count(10)->create();
-
-        // Crear un admin fijo
-        Usuario::create([
-            'nombre' => 'Admin',
-            'apellidos' => 'Principal',
-            'correo' => 'admin@tuxtla.tecnm.mx',
-            'clave' => bcrypt('123'),
-            'rol' => 'admin'
-        ]);
+        Usuario::factory()->count(70)->create(['rol'=>'cliente']);
+        Usuario::factory()->count(30)->create(['rol'=>'vendedor']);
     }
 }

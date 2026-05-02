@@ -23,6 +23,12 @@ class Product extends Model
 
     public function categorias()
     {
-        return $this->belongsToMany(Categoria::class, 'categoria_producto', 'producto_id', 'categoria_id');
+        return $this->belongsToMany(\App\Models\Categoria::class);
     }
+
+    public function ventas()
+    {
+        return $this->hasMany(\App\Models\Venta::class);
+    }
+    
 }

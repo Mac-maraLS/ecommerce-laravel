@@ -1,100 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Nosotros | Café ToMaBra</title>
+@extends('layouts.app')
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            background: #fafafa;
-        }
+@section('content')
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 10%;
-            background: white;
-        }
+<div class="px-16 py-16 max-w-3xl">
 
-        .btn {
-            background: #4e342e;
-            color: white;
-            padding: 8px 15px;
-            text-decoration: none;
-        }
+<h1 class="text-4xl font-serif mb-6">Nuestra Historia</h1>
 
-        .hero {
-            height: 50vh;
-            background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93');
-            background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .container {
-            padding: 50px 10%;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
-
-<body>
-
-<nav>
-    <a href="/">Inicio</a>
-
-    <div>
-        @guest
-            <a href="/login" class="btn">Login</a>
-            <a href="/register" class="btn">Registro</a>
-        @endguest
-
-        @auth
-            <a href="/products" class="btn">Tienda</a>
-        @endauth
-    </div>
-</nav>
-
-<div class="hero">
-    <h1>Sobre Nosotros</h1>
-</div>
-
-<div class="container">
-
-    <div class="card">
-        <h2>☕ Nuestra Historia</h2>
-        <p>
-            Café ToMaBra nace en Chiapas con la misión de llevar café de alta calidad
-            directamente del productor al consumidor.
-        </p>
-    </div>
-
-    <div class="card">
-        <h2>🌱 Nuestra Misión</h2>
-        <p>
-            Ofrecer café orgánico, apoyar a productores locales y brindar
-            una experiencia única a nuestros clientes.
-        </p>
-    </div>
-
-    <div class="card">
-        <h2>📍 Ubicación</h2>
-        <p>
-            Tuxtla Gutiérrez, Chiapas, México
-        </p>
-    </div>
+<p class="text-gray-600 leading-7">
+ToMaBra nace en las montañas de Chiapas, donde cada grano es cultivado con dedicación.
+Trabajamos con productores locales para ofrecer café auténtico y de calidad.
+</p>
 
 </div>
 
-</body>
-</html>
+@endsection

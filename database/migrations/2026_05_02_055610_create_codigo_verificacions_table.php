@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('categorias', function (Blueprint $table) {
+        Schema::create('codigo_verificacions', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
+            $table->string('codigo');
+            $table->timestamp('expiracion');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('categorias');
+        Schema::dropIfExists('codigo_verificacions');
     }
 };

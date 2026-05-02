@@ -30,18 +30,19 @@ class ProductController extends Controller
 
     public function store(StoreProductoRequest $request)
     {
+        $rutaImagen = null;
+
+        if ($request->hasFile('image')) {
+            $rutaImagen = $request->file('image')->store('productos', 'public');
+        }
+
         $product = Product::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
+            'image' => $rutaImagen,
             'usuario_id' => auth()->id()
-        ]);
-
-        // 🔥 LOG
-        Log::channel('productos')->info('Producto creado', [
-            'usuario_id' => auth()->id(),
-            'producto_id' => $product->id
         ]);
 
         return redirect('/products');

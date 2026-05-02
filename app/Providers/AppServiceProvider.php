@@ -5,9 +5,17 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
+use App\Models\Venta;
+use App\Policies\VentaPolicy;
+
 
 class AppServiceProvider extends ServiceProvider
 {
+    
+    protected $policies = [
+        \App\Models\Venta::class => \App\Policies\VentaPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */

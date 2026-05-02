@@ -27,4 +27,10 @@ class Usuario extends Authenticatable
     {
         return $this->clave;
     }
+
+    public function ventas()
+    {
+        return $this->hasMany(\App\Models\Venta::class);
+    }
+
 }

@@ -2,30 +2,19 @@
 
 @section('content')
 
-<h1 class="title">Iniciar Sesión</h1>
-
-@if(session('error'))
-    <div class="alert-error">{{ session('error') }}</div>
-@endif
-
-@if(session('success'))
-    <div class="alert-success">{{ session('success') }}</div>
-@endif
+<h1 class="text-2xl mb-4">Login</h1>
 
 <form method="POST" action="/login">
-    @csrf
+@csrf
 
-    <div class="form-group">
-        <label class="label">Correo</label>
-        <input type="text" name="correo" class="input">
-    </div>
+<input name="correo" placeholder="Correo" class="border p-2 mb-2 block">
 
-    <div class="form-group">
-        <label class="label">Contraseña</label>
-        <input type="password" name="clave" class="input">
-    </div>
+<input type="password" name="clave" placeholder="Contraseña" class="border p-2 mb-2 block">
 
-    <button class="btn-full">Entrar</button>
+<button class="bg-amber-600 text-white px-4 py-2">
+Entrar
+</button>
+
 </form>
 
 @endsection

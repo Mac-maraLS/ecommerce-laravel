@@ -2,36 +2,22 @@
 
 @section('content')
 
-<h1 class="title">Registro</h1>
+<div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow">
 
-@if ($errors->any())
-    <div class="alert-error">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
+<h2 class="text-2xl font-bold mb-6 text-center">Crear cuenta</h2>
 
 <form method="POST" action="/register">
-    @csrf
+@csrf
 
-    <div class="form-group">
-        <input type="text" name="nombre" placeholder="Nombre" class="input">
-    </div>
+<input name="nombre" placeholder="Nombre" class="input mb-3">
+<input name="apellidos" placeholder="Apellidos" class="input mb-3">
+<input name="correo" placeholder="Correo" class="input mb-3">
+<input type="password" name="clave" placeholder="Contraseña" class="input mb-4">
 
-    <div class="form-group">
-        <input type="text" name="apellidos" placeholder="Apellidos" class="input">
-    </div>
+<button class="btn-full">Registrarse</button>
 
-    <div class="form-group">
-        <input type="text" name="correo" placeholder="Correo" class="input">
-    </div>
-
-    <div class="form-group">
-        <input type="password" name="clave" placeholder="Contraseña" class="input">
-    </div>
-
-    <button class="btn-full">Registrarse</button>
 </form>
+
+</div>
 
 @endsection

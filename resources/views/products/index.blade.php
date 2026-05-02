@@ -9,6 +9,9 @@
 <div class="grid-products">
     @foreach($products as $product)
         <div class="card">
+            @if($product->image)
+                <img src="{{ asset('storage/'.$product->image) }}" width="150">
+            @endif
             <h2 class="card-title">{{ $product->name }}</h2>
             <p>{{ $product->description }}</p>
             <p class="card-price">$ {{ $product->price }}</p>

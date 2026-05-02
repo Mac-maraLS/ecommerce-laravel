@@ -5,65 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Usuario;
+use App\Models\CodigoVerificacion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Codigo2FAMail;
+
 class AuthController extends Controller
 {
+    // 🔐 LOGIN VIEW
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        // 🔥 FORZAR LOG (para crear archivo sí o sí)
-        Log::channel('autenticacion')->info('Intento de login');
-
-        $credentials = [
-            'correo' => $request->correo,
-            'password' => $request->clave
-        ];
-
-        if (Auth::attempt($credentials)) {
-
-            Log::channel('autenticacion')->info('Login exitoso', [
-                'usuario_id' => auth()->id(),
-                'correo' => $request->correo,
-                'ip' => $request->ip()
-            ]);
-
-            return redirect('/dashboard');
-        }
-
-        Log::channel('autenticacion')->warning('Login fallido', [
-            'correo' => $request->correo,
-            'ip' => $request->ip()
-        ]);
-
-        return back()->with('error', 'Credenciales incorrectas');
-    }
-
-    public function logout(Request $request)
-    {
-        Log::channel('autenticacion')->info('Logout', [
-            'usuario_id' => auth()->id(),
-            'ip' => $request->ip()
-        ]);
-
-        Auth::logout();
-
-        return redirect('/');
-    }
-
+    // 📝 REGISTER VIEW
     public function showRegister()
     {
         return view('auth.register');
     }
 
+    // 📝 REGISTRAR USUARIO
     public function register(Request $request)
     {
-        // VALIDACIÓN
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
@@ -71,8 +36,7 @@ class AuthController extends Controller
             'clave' => 'required|min:6'
         ]);
 
-        // CREAR USUARIO
-        $usuario = Usuario::create([
+        Usuario::create([
             'nombre' => $request->nombre,
             'apellidos' => $request->apellidos,
             'correo' => $request->correo,
@@ -80,13 +44,80 @@ class AuthController extends Controller
             'rol' => 'cliente'
         ]);
 
-        // 🔥 LOG REGISTRO (EXTRA PARA PUNTOS)
-        Log::channel('autenticacion')->info('Usuario registrado', [
-            'usuario_id' => $usuario->id,
-            'correo' => $usuario->correo,
-            'ip' => $request->ip()
-        ]);
-
         return redirect('/login')->with('success', 'Usuario registrado correctamente');
+    }
+
+    // 🔐 LOGIN (2FA)
+    public function login(Request $request)
+    {
+        $credentials = [
+            'correo' => $request->correo,
+            'password' => $request->clave
+        ];
+
+        if (Auth::validate($credentials)) {
+
+            $usuario = Usuario::where('correo', $request->correo)->first();
+
+            $codigo = rand(100000, 999999);
+
+            CodigoVerificacion::create([
+                'usuario_id' => $usuario->id,
+                'codigo' => $codigo,
+                'expiracion' => now()->addMinutes(5)
+            ]);
+
+            Mail::to($usuario->correo)->send(new Codigo2FAMail($codigo));
+
+            Log::channel('autenticacion')->info('Codigo 2FA generado', [
+                'usuario_id' => $usuario->id,
+                'codigo' => $codigo
+            ]);
+
+            session(['2fa_user' => $usuario->id]);
+
+            return redirect('/verificar-codigo');
+        }
+
+        return back()->with('error', 'Credenciales incorrectas');
+    }
+
+    // 📩 FORM 2FA
+    public function formCodigo()
+    {
+        return view('auth.codigo');
+    }
+
+    // ✅ VALIDAR CÓDIGO
+    public function validarCodigo(Request $request)
+    {
+        $usuario_id = session('2fa_user');
+
+        $registro = CodigoVerificacion::where('usuario_id', $usuario_id)
+            ->latest()
+            ->first();
+
+        if (!$registro) {
+            return redirect('/login');
+        }
+
+        if ($registro->codigo != $request->codigo) {
+            return back()->with('error', 'Código incorrecto');
+        }
+
+        if (now()->gt($registro->expiracion)) {
+            return back()->with('error', 'Código expirado');
+        }
+
+        Auth::loginUsingId($usuario_id);
+
+        return redirect('/dashboard');
+    }
+
+    // 🔓 LOGOUT
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
     }
 }

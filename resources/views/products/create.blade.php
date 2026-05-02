@@ -2,25 +2,26 @@
 
 @section('content')
 
-<h1 class="title">Nuevo Producto</h1>
+<h1 class="text-2xl font-bold mb-6">Nuevo Producto</h1>
 
-@if ($errors->any())
-    <div class="alert-error">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
+<form method="POST" action="/products" enctype="multipart/form-data"
+class="bg-white p-6 rounded-xl shadow max-w-lg">
 
-<form method="POST" action="/products">
-    @csrf
+@csrf
 
-    <input type="text" name="name" placeholder="Nombre" class="input mb-3">
-    <textarea name="description" placeholder="Descripción" class="textarea mb-3"></textarea>
-    <input type="number" name="price" placeholder="Precio" class="input mb-3">
-    <input type="number" name="stock" placeholder="Stock" class="input mb-3">
+<input name="name" placeholder="Nombre" class="input mb-3">
 
-    <button class="btn-full">Guardar</button>
+<textarea name="description" placeholder="Descripción"
+class="input mb-3"></textarea>
+
+<input name="price" type="number" placeholder="Precio" class="input mb-3">
+
+<input name="stock" type="number" placeholder="Stock" class="input mb-3">
+
+<input type="file" name="image" class="mb-4">
+
+<button class="btn-full">Guardar</button>
+
 </form>
 
 @endsection

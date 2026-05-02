@@ -90,3 +90,35 @@ body {
 .btn-full {
     @apply w-full bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* FUENTE */
+body {
+    font-family: system-ui, sans-serif;
+}
+
+/* INPUTS */
+.input {
+    @apply w-full border border-gray-300 rounded px-3 py-2;
+}
+
+/* BOTONES */
+.btn {
+    @apply px-4 py-2 rounded font-medium;
+}
+
+.btn-primary {
+    @apply bg-amber-600 text-white hover:bg-amber-700;
+}
+
+.btn-secondary {
+    @apply bg-gray-800 text-white hover:bg-gray-900;
+}
+
+/* TARJETAS */
+.card {
+    @apply bg-white p-6 rounded-xl shadow;
+}
