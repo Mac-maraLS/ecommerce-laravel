@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -47,54 +48,88 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Usuarios de prueba en tabla 'usuarios' (usada por AuthController/login)
+        Usuario::updateOrCreate(
+            ['correo' => 'admin@tienda.test'],
+            [
+                'nombre' => 'Administrador',
+                'apellidos' => 'ToMaBra',
+                'clave' => Hash::make('password'),
+                'rol' => 'vendedor',
+            ]
+        );
+
+        Usuario::updateOrCreate(
+            ['correo' => 'empleado@tienda.test'],
+            [
+                'nombre' => 'Empleado',
+                'apellidos' => 'ToMaBra',
+                'clave' => Hash::make('password'),
+                'rol' => 'vendedor',
+            ]
+        );
+
+        Usuario::updateOrCreate(
+            ['correo' => 'cliente@tienda.test'],
+            [
+                'nombre' => 'Cliente',
+                'apellidos' => 'ToMaBra',
+                'clave' => Hash::make('password'),
+                'rol' => 'cliente',
+            ]
+        );
+
+        $firstUsuario = \App\Models\Usuario::first();
+        $uid = $firstUsuario ? $firstUsuario->id : 1;
+
         $productos = [
             [
                 'name' => 'Cappuccino Clásico',
-                'category' => 'bebidas_calientes',
                 'description' => 'Espresso con leche vaporizada y espuma cremosa.',
                 'price' => 45.00,
                 'stock' => 50,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
             [
                 'name' => 'Frappé de Moka',
-                'category' => 'frappes',
                 'description' => 'Mezcla helada de espresso, chocolate y crema.',
                 'price' => 65.00,
                 'stock' => 30,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
             [
                 'name' => 'Cheesecake',
-                'category' => 'postres',
                 'description' => 'Base de galleta, relleno cremoso y frambuesa.',
                 'price' => 55.00,
                 'stock' => 15,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
             [
                 'name' => 'Latte Macchiato',
-                'category' => 'bebidas_calientes',
                 'description' => 'Leche caliente con un toque de espresso intenso.',
                 'price' => 50.00,
                 'stock' => 40,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
             [
                 'name' => 'Croissant de Almendra',
-                'category' => 'postres',
                 'description' => 'Pan del día cubierto de almendras tostadas.',
                 'price' => 35.00,
                 'stock' => 20,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
             [
                 'name' => 'Americano',
-                'category' => 'bebidas_calientes',
                 'description' => 'Espresso diluido en agua caliente, puro y limpio.',
                 'price' => 38.00,
                 'stock' => 100,
                 'image' => null,
+                'usuario_id' => $uid,
             ],
         ];
 

@@ -18,7 +18,7 @@ class UsuarioFactory extends Factory
         return [
             'nombre' => $nombre,
             'apellidos' => $apellido,
-            'correo' => strtolower(substr($nombre, 0, 1) . $apellido) . '@tuxtla.tecnm.mx',
+            'correo' => $this->faker->unique()->safeEmail(),
             'clave' => Hash::make('123'),
             'rol' => $this->faker->randomElement(['cliente', 'gerente'])
         ];
