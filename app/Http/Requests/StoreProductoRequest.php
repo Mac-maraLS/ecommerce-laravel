@@ -19,6 +19,8 @@ class StoreProductoRequest extends FormRequest
             'precio' => ['required', 'numeric', 'min:1', 'max:999999.99'],
             'existencia' => ['required', 'integer', 'min:0', 'max:100000'],
             'usuario_id' => ['required', 'integer', 'exists:usuarios,id'],
+            'fotos' => ['required', 'array', 'min:1', 'max:5'],
+            'fotos.*' => ['image', 'max:2048'],
             'categorias' => ['required', 'array', 'min:1'],
             'categorias.*' => ['integer', 'exists:categorias,id'],
         ];

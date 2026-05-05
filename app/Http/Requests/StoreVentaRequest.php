@@ -18,6 +18,7 @@ class StoreVentaRequest extends FormRequest
             'cliente_id' => ['required', 'integer', 'exists:usuarios,id'],
             'fecha' => ['required', 'date'],
             'total' => ['required', 'numeric', 'min:1', 'max:999999.99'],
+            'ticket' => ['required', 'image', 'max:2048'],
         ];
     }
 }

@@ -18,6 +18,7 @@ class Usuario extends Authenticatable
     public const ROL_ADMINISTRADOR = 'administrador';
     public const ROL_GERENTE = 'gerente';
     public const ROL_CLIENTE = 'cliente';
+    public const ROL_VENDEDOR = 'vendedor';
 
     protected $table = 'usuarios';
 
@@ -54,6 +55,11 @@ class Usuario extends Authenticatable
     public function productos(): HasMany
     {
         return $this->hasMany(Producto::class, 'usuario_id');
+    }
+
+    public function codigosVerificacion(): HasMany
+    {
+        return $this->hasMany(CodigoVerificacion::class, 'usuario_id');
     }
 
     public function ventasComoCliente(): HasMany
@@ -102,5 +108,10 @@ class Usuario extends Authenticatable
     public function esCliente(): bool
     {
         return $this->rol === self::ROL_CLIENTE;
+    }
+
+    public function esVendedor(): bool
+    {
+        return $this->rol === self::ROL_VENDEDOR;
     }
 }

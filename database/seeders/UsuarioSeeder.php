@@ -10,12 +10,14 @@ class UsuarioSeeder extends Seeder
 {
     public function run(): void
     {
+        $clave = Hash::make('123');
+
         Usuario::updateOrCreate(
             ['correo' => 'admin@tuxtla.tecnm.mx'],
             [
                 'nombre' => 'Ana',
                 'apellidos' => 'Morales',
-                'clave' => Hash::make('123'),
+                'clave' => $clave,
                 'rol' => Usuario::ROL_ADMINISTRADOR,
             ]
         );
@@ -25,31 +27,33 @@ class UsuarioSeeder extends Seeder
             [
                 'nombre' => 'Mario',
                 'apellidos' => 'Lopez',
-                'clave' => Hash::make('123'),
+                'clave' => $clave,
                 'rol' => Usuario::ROL_GERENTE,
             ]
         );
 
-        $clientes = [
-            ['nombre' => 'Juan', 'apellidos' => 'Sanchez', 'correo' => 'jsanchez@tuxtla.tecnm.mx'],
-            ['nombre' => 'Maria', 'apellidos' => 'Hernandez', 'correo' => 'mhernandez@tuxtla.tecnm.mx'],
-            ['nombre' => 'Pedro', 'apellidos' => 'Martinez', 'correo' => 'pmartinez@tuxtla.tecnm.mx'],
-        ];
-
-        foreach ($clientes as $cliente) {
+        for ($i = 1; $i <= 70; $i++) {
             Usuario::updateOrCreate(
-                ['correo' => $cliente['correo']],
+                ['correo' => "comprador{$i}@tuxtla.tecnm.mx"],
                 [
-                    'nombre' => $cliente['nombre'],
-                    'apellidos' => $cliente['apellidos'],
-                    'clave' => Hash::make('123'),
+                    'nombre' => "Comprador {$i}",
+                    'apellidos' => 'Demo',
+                    'clave' => $clave,
                     'rol' => Usuario::ROL_CLIENTE,
                 ]
             );
         }
 
-        Usuario::factory()->count(1)->create([
-            'rol' => Usuario::ROL_CLIENTE,
-        ]);
+        for ($i = 1; $i <= 30; $i++) {
+            Usuario::updateOrCreate(
+                ['correo' => "vendedor{$i}@tuxtla.tecnm.mx"],
+                [
+                    'nombre' => "Vendedor {$i}",
+                    'apellidos' => 'Demo',
+                    'clave' => $clave,
+                    'rol' => Usuario::ROL_VENDEDOR,
+                ]
+            );
+        }
     }
 }

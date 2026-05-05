@@ -33,6 +33,11 @@
         Total
         <input type="number" step="0.01" name="total" value="{{ old('total', $venta?->total) }}" required>
     </label>
+
+    <label>
+        Ticket
+        <input type="file" name="ticket" accept="image/*" @required($venta === null)>
+    </label>
 </div>
 
 <div class="actions">

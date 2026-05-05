@@ -33,9 +33,9 @@ class UsuarioFactory extends Factory
         return [
             'nombre' => $nombre,
             'apellidos' => $apellido,
-            'correo' => strtolower(substr($nombre, 0, 1).$apellido).'@tuxtla.tecnm.mx',
+            'correo' => strtolower(substr($nombre, 0, 1).$apellido.self::$indice).'@tuxtla.tecnm.mx',
             'clave' => Hash::make('123'),
-            'rol' => fake()->randomElement([Usuario::ROL_CLIENTE, Usuario::ROL_GERENTE]),
+            'rol' => fake()->randomElement([Usuario::ROL_CLIENTE, Usuario::ROL_VENDEDOR]),
         ];
     }
 }

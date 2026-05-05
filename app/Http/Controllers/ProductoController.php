@@ -10,6 +10,7 @@ use App\Models\Usuario;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -36,7 +37,7 @@ class ProductoController extends Controller
         return view('productos.create', [
             'categorias' => Categoria::orderBy('nombre')->get(),
             'vendedores' => Usuario::query()
-                ->whereIn('rol', [Usuario::ROL_ADMINISTRADOR, Usuario::ROL_GERENTE])
+                ->where('rol', Usuario::ROL_VENDEDOR)
                 ->orderBy('nombre')
                 ->get(),
         ]);
@@ -47,7 +48,15 @@ class ProductoController extends Controller
         $this->authorize('create', Producto::class);
 
         $data = $request->validated();
-        $producto = Producto::create(collect($data)->except('categorias')->all());
+        $fotos = [];
+
+        foreach ($request->file('fotos', []) as $foto) {
+            $fotos[] = $foto->store('productos', 'public');
+        }
+
+        $producto = Producto::create(
+            collect($data)->except('categorias', 'fotos')->merge(['fotos' => $fotos])->all()
+        );
         $producto->categorias()->sync($data['categorias']);
 
         Log::channel('productos')->info('Producto creado', [
@@ -67,7 +76,7 @@ class ProductoController extends Controller
             'producto' => $producto->load('categorias'),
             'categorias' => Categoria::orderBy('nombre')->get(),
             'vendedores' => Usuario::query()
-                ->whereIn('rol', [Usuario::ROL_ADMINISTRADOR, Usuario::ROL_GERENTE])
+                ->where('rol', Usuario::ROL_VENDEDOR)
                 ->orderBy('nombre')
                 ->get(),
         ]);
@@ -78,6 +87,17 @@ class ProductoController extends Controller
         $this->authorize('update', $producto);
 
         $data = $request->validated();
+
+        if ($request->hasFile('fotos')) {
+            foreach ($producto->fotos ?? [] as $foto) {
+                Storage::disk('public')->delete($foto);
+            }
+
+            $data['fotos'] = collect($request->file('fotos'))
+                ->map(fn ($foto) => $foto->store('productos', 'public'))
+                ->all();
+        }
+
         $producto->update(collect($data)->except('categorias')->all());
         $producto->categorias()->sync($data['categorias']);
 
@@ -97,6 +117,10 @@ class ProductoController extends Controller
         $productoId = $producto->id;
         $usuarioId = request()->user()->id;
         $ip = request()->ip();
+
+        foreach ($producto->fotos ?? [] as $foto) {
+            Storage::disk('public')->delete($foto);
+        }
 
         $producto->delete();
 

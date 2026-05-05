@@ -20,6 +20,7 @@ class UpdateUsuarioRequest extends StoreUsuarioRequest
                 Usuario::ROL_ADMINISTRADOR,
                 Usuario::ROL_GERENTE,
                 Usuario::ROL_CLIENTE,
+                Usuario::ROL_VENDEDOR,
             ])],
         ];
     }

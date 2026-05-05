@@ -14,6 +14,8 @@ Route::get('/catalogo', [ProductoController::class, 'catalogo'])->name('catalogo
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+    Route::get('/login/verificar-codigo', [AuthenticatedSessionController::class, 'verificarCodigo'])->name('login.2fa');
+    Route::post('/login/verificar-codigo', [AuthenticatedSessionController::class, 'validarCodigo'])->name('login.2fa.validar');
 });
 
 Route::middleware('auth')->group(function () {
@@ -22,6 +24,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('productos', ProductoController::class)->except('show');
     Route::resource('categorias', CategoriaController::class)->except('show');
+    Route::get('/ventas/{venta}/ticket', [VentaController::class, 'ticket'])->name('ventas.ticket');
+    Route::patch('/ventas/{venta}/validar', [VentaController::class, 'validar'])->name('ventas.validar');
     Route::resource('ventas', VentaController::class);
     Route::resource('usuarios', UsuarioController::class)->except('show');
 });

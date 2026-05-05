@@ -6,62 +6,39 @@ use App\Models\Categoria;
 use App\Models\Producto;
 use App\Models\Usuario;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoSeeder extends Seeder
 {
     public function run(): void
     {
-        $vendedores = Usuario::query()
-            ->whereIn('correo', ['admin@tuxtla.tecnm.mx', 'gerente@tuxtla.tecnm.mx'])
-            ->get();
+        Storage::disk('public')->put(
+            'productos/demo.png',
+            base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
+        );
 
-        $productos = [
-            [
-                'nombre' => 'Cappuccino Clasico',
-                'descripcion' => 'Espresso con leche vaporizada y espuma cremosa, servido al momento.',
-                'precio' => 52,
-                'existencia' => 30,
-                'categorias' => ['Bebidas Calientes'],
-            ],
-            [
-                'nombre' => 'Latte Vainilla',
-                'descripcion' => 'Cafe suave con notas de vainilla y leche texturizada.',
-                'precio' => 58,
-                'existencia' => 24,
-                'categorias' => ['Bebidas Calientes'],
-            ],
-            [
-                'nombre' => 'Frappe Mocha',
-                'descripcion' => 'Bebida helada con espresso, chocolate y crema batida.',
-                'precio' => 69,
-                'existencia' => 18,
-                'categorias' => ['Bebidas Frias'],
-            ],
-            [
-                'nombre' => 'Croissant de Almendra',
-                'descripcion' => 'Pan hojaldrado relleno con crema de almendra, ideal para desayuno.',
-                'precio' => 46,
-                'existencia' => 16,
-                'categorias' => ['Panaderia', 'Postres'],
-            ],
-        ];
+        $vendedores = Usuario::query()->where('rol', Usuario::ROL_VENDEDOR)->orderBy('id')->get();
+        $categorias = Categoria::query()->orderBy('id')->get();
 
-        foreach ($productos as $indice => $data) {
-            $producto = Producto::updateOrCreate(
-                ['nombre' => $data['nombre']],
-                [
-                    'descripcion' => $data['descripcion'],
-                    'precio' => $data['precio'],
-                    'existencia' => $data['existencia'],
-                    'usuario_id' => $vendedores[$indice % $vendedores->count()]->id,
-                ]
-            );
+        foreach ($vendedores as $indiceVendedor => $vendedor) {
+            for ($i = 1; $i <= 3; $i++) {
+                $indice = ($indiceVendedor * 3) + $i;
 
-            $categoriaIds = Categoria::query()
-                ->whereIn('nombre', $data['categorias'])
-                ->pluck('id');
+                $producto = Producto::updateOrCreate(
+                    ['nombre' => "Producto {$indice}"],
+                    [
+                        'descripcion' => "Producto de cafeteria generado para el vendedor {$vendedor->nombre_completo}.",
+                        'precio' => 35 + $indice,
+                        'existencia' => 20 + $i,
+                        'fotos' => ['productos/demo.png'],
+                        'usuario_id' => $vendedor->id,
+                    ]
+                );
 
-            $producto->categorias()->sync($categoriaIds);
+                $producto->categorias()->sync([
+                    $categorias[($indice - 1) % $categorias->count()]->id,
+                ]);
+            }
         }
     }
 }

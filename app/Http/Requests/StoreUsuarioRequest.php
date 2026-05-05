@@ -24,6 +24,7 @@ class StoreUsuarioRequest extends FormRequest
                 Usuario::ROL_ADMINISTRADOR,
                 Usuario::ROL_GERENTE,
                 Usuario::ROL_CLIENTE,
+                Usuario::ROL_VENDEDOR,
             ])],
         ];
     }

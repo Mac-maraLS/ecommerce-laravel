@@ -9,6 +9,9 @@
     <section class="grid cols-3">
         @foreach($productos as $producto)
             <article class="card">
+                @if($producto->primeraFoto())
+                    <img class="product-image" src="{{ asset('storage/'.$producto->primeraFoto()) }}" alt="{{ $producto->nombre }}">
+                @endif
                 <h3>{{ $producto->nombre }}</h3>
                 <p>{{ $producto->descripcion }}</p>
                 <p><strong>${{ number_format($producto->precio, 2) }}</strong> | Existencia: {{ $producto->existencia }}</p>

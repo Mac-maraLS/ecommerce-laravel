@@ -45,6 +45,9 @@
         .button { display: inline-block; background: var(--accent); color: white; border: none; border-radius: 10px; padding: 10px 16px; text-decoration: none; cursor: pointer; }
         .button.secondary { background: #57534e; }
         .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); margin: 2px 6px 2px 0; }
+        .thumb { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); margin: 2px; }
+        .thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .thumbs img, .product-image { width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 12px; }
         .alert { padding: 14px 16px; border-radius: 12px; margin-bottom: 18px; }
         .alert.success { background: #dcfce7; }
         .alert.error { background: #fee2e2; }
@@ -58,7 +61,9 @@
             <a href="{{ route('inicio') }}">Inicio</a>
             <a href="{{ route('catalogo') }}">Catalogo</a>
             @auth
-                <a href="{{ route('dashboard') }}">Dashboard</a>
+                @if(auth()->user()->esAdministrador())
+                    <a href="{{ route('dashboard') }}">Dashboard</a>
+                @endif
                 <a href="{{ route('productos.index') }}">Productos</a>
                 <a href="{{ route('categorias.index') }}">Categorias</a>
                 <a href="{{ route('ventas.index') }}">Ventas</a>

@@ -15,6 +15,9 @@ class Venta extends Model
         'cliente_id',
         'fecha',
         'total',
+        'ticket',
+        'validada_at',
+        'validada_por',
     ];
 
     protected function casts(): array
@@ -22,6 +25,7 @@ class Venta extends Model
         return [
             'fecha' => 'date',
             'total' => 'decimal:2',
+            'validada_at' => 'datetime',
         ];
     }
 
@@ -38,5 +42,15 @@ class Venta extends Model
     public function vendedor(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'vendedor_id');
+    }
+
+    public function gerenteValidador(): BelongsTo
+    {
+        return $this->belongsTo(Usuario::class, 'validada_por');
+    }
+
+    public function estaValidada(): bool
+    {
+        return $this->validada_at !== null;
     }
 }

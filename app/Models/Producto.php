@@ -16,8 +16,17 @@ class Producto extends Model
         'descripcion',
         'precio',
         'existencia',
+        'fotos',
         'usuario_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'fotos' => 'array',
+            'precio' => 'decimal:2',
+        ];
+    }
 
     public function vendedor(): BelongsTo
     {
@@ -33,5 +42,10 @@ class Producto extends Model
     public function ventas(): HasMany
     {
         return $this->hasMany(Venta::class, 'producto_id');
+    }
+
+    public function primeraFoto(): ?string
+    {
+        return $this->fotos[0] ?? null;
     }
 }

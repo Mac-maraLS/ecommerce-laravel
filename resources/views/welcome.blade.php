@@ -9,7 +9,7 @@
             @guest
                 <a class="button secondary" href="{{ route('login') }}">Entrar al sistema</a>
             @else
-                <a class="button secondary" href="{{ route('dashboard') }}">Ir al dashboard</a>
+                <a class="button secondary" href="{{ auth()->user()->esAdministrador() ? route('dashboard') : route('ventas.index') }}">Ir al sistema</a>
             @endguest
         </div>
     </section>
@@ -17,6 +17,9 @@
     <section class="grid cols-3">
         @foreach($productos as $producto)
             <article class="card">
+                @if($producto->primeraFoto())
+                    <img class="product-image" src="{{ asset('storage/'.$producto->primeraFoto()) }}" alt="{{ $producto->nombre }}">
+                @endif
                 <h3>{{ $producto->nombre }}</h3>
                 <p>{{ $producto->descripcion }}</p>
                 <p><strong>${{ number_format($producto->precio, 2) }}</strong></p>

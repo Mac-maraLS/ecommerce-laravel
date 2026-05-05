@@ -17,7 +17,7 @@
     <label>
         Rol
         <select name="rol" required>
-            @foreach([\App\Models\Usuario::ROL_ADMINISTRADOR, \App\Models\Usuario::ROL_GERENTE, \App\Models\Usuario::ROL_CLIENTE] as $rol)
+            @foreach([\App\Models\Usuario::ROL_ADMINISTRADOR, \App\Models\Usuario::ROL_GERENTE, \App\Models\Usuario::ROL_CLIENTE, \App\Models\Usuario::ROL_VENDEDOR] as $rol)
                 <option value="{{ $rol }}" @selected(old('rol', $usuario?->rol) === $rol)>{{ $rol }}</option>
             @endforeach
         </select>

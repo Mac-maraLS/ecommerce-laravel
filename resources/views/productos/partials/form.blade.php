@@ -32,6 +32,19 @@
 </label>
 
 <label>
+    Fotos del producto
+    <input type="file" name="fotos[]" accept="image/*" multiple @required($producto === null)>
+</label>
+
+@if($producto?->fotos)
+    <div class="thumbs">
+        @foreach($producto->fotos as $foto)
+            <img src="{{ asset('storage/'.$foto) }}" alt="{{ $producto->nombre }}">
+        @endforeach
+    </div>
+@endif
+
+<label>
     Categorias
     <select name="categorias[]" multiple size="6" required>
         @php($seleccionadas = old('categorias', $producto?->categorias->pluck('id')->all() ?? []))

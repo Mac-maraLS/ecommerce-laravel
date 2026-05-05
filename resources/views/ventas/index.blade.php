@@ -17,6 +17,7 @@
                 <th>Vendedor</th>
                 <th>Fecha</th>
                 <th>Total</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,8 +30,21 @@
                     <td>{{ $venta->vendedor->nombre_completo }}</td>
                     <td>{{ $venta->fecha->format('Y-m-d') }}</td>
                     <td>${{ number_format($venta->total, 2) }}</td>
+                    <td>{{ $venta->estaValidada() ? 'Validada' : 'Pendiente' }}</td>
                     <td class="actions">
                         <a class="button secondary" href="{{ route('ventas.show', $venta) }}">Ver</a>
+                        @can('viewTicket', $venta)
+                            <a class="button secondary" href="{{ route('ventas.ticket', $venta) }}">Ticket</a>
+                        @endcan
+                        @can('validar', $venta)
+                            @unless($venta->estaValidada())
+                                <form class="inline" method="POST" action="{{ route('ventas.validar', $venta) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button>Validar</button>
+                                </form>
+                            @endunless
+                        @endcan
                         @can('update', $venta)
                             <a class="button secondary" href="{{ route('ventas.edit', $venta) }}">Editar</a>
                         @endcan
@@ -44,7 +58,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="7">No hay ventas.</td></tr>
+                <tr><td colspan="8">No hay ventas.</td></tr>
             @endforelse
         </tbody>
     </table>

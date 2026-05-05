@@ -12,6 +12,7 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Fotos</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
                 <th>Existencia</th>
@@ -24,6 +25,11 @@
             @forelse($productos as $producto)
                 <tr>
                     <td>{{ $producto->nombre }}</td>
+                    <td>
+                        @foreach($producto->fotos ?? [] as $foto)
+                            <img class="thumb" src="{{ asset('storage/'.$foto) }}" alt="{{ $producto->nombre }}">
+                        @endforeach
+                    </td>
                     <td>{{ $producto->descripcion }}</td>
                     <td>${{ number_format($producto->precio, 2) }}</td>
                     <td>{{ $producto->existencia }}</td>
@@ -47,7 +53,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="7">No hay productos.</td></tr>
+                <tr><td colspan="8">No hay productos.</td></tr>
             @endforelse
         </tbody>
     </table>
